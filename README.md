@@ -1,1 +1,1 @@
-C++简单Socket服务器
+C++简单Socket客户端
