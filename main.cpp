@@ -20,4 +20,14 @@ int main(int, char**){
     hints.ai_socktype=SOCK_STREAM;
     hints.ai_protocol=IPPROTO_TCP;
     std::cout << "Hello, from CSocketClient!\n";
+    // 解析服务器地址和端口
+    iResult=getaddrinfo("127.0.0.1",DEFAULT_PORT,&hints,&result);//调用getaddrinfo函数将服务器的地址("127.0.0.1")和端口号(DEFAULT_PORT)解析为一个或多个addrinfo 结构体
+    
+    if(iResult!=0)
+    {
+        std::cerr<<"getaddrinfo failed: "<<iResult<<std::endl;
+        WSACleanup();
+        return 1;
+    }
+    
 }
