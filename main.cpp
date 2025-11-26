@@ -5,6 +5,15 @@
 #pragma comment(lib, "Ws2_32.lib")
 #define DEFAULT_PORT "8888"
 #define DEFAULT_BUFLEN 512
+/**
+ * socket 发送消息
+ */
+void socketSendMsg(SOCKET clientSocket,const char *sendMessage){
+    if(send(clientSocket,sendMessage,strlen(sendMessage),0))
+    {
+        std::cerr << "send failed: " << WSAGetLastError() << std::endl; // 输出发送失败的错误信息
+    }
+}
 int main(int, char **)
 {
     WSADATA wsaData;
@@ -63,7 +72,10 @@ int main(int, char **)
         return 1;
     }
     char revbuf[DEFAULT_BUFLEN];
+    const char *connectMsg="客户端发送的连接测试消息";
+    socketSendMsg(ConnectSocket,connectMsg);
     iResult=recv(ConnectSocket,revbuf,DEFAULT_BUFLEN,0);
+    
     if(iResult>0)
     {
         std::cout<<"Received: "<<std::string(revbuf,0,iResult)<<std::endl;
