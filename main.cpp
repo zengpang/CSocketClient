@@ -9,7 +9,7 @@
  * socket 发送消息
  */
 void socketSendMsg(SOCKET clientSocket,const char *sendMessage){
-    if(send(clientSocket,sendMessage,strlen(sendMessage),0))
+    if(!send(clientSocket,sendMessage,strlen(sendMessage),0))
     {
         std::cerr << "send failed: " << WSAGetLastError() << std::endl; // 输出发送失败的错误信息
     }
