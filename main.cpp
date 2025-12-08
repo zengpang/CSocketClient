@@ -8,8 +8,9 @@
 /**
  * socket 发送消息
  */
-void socketSendMsg(SOCKET clientSocket,const char *sendMessage){
-    if(!send(clientSocket,sendMessage,strlen(sendMessage),0))
+void socketSendMsg(SOCKET clientSocket, const char *sendMessage)
+{
+    if (!send(clientSocket, sendMessage, strlen(sendMessage), 0))
     {
         std::cerr << "send failed: " << WSAGetLastError() << std::endl; // 输出发送失败的错误信息
     }
@@ -65,35 +66,42 @@ int main(int, char **)
         break;
     };
     freeaddrinfo(result);
-    if(ConnectSocket==INVALID_SOCKET)
+    if (ConnectSocket == INVALID_SOCKET)
     {
-        std::cerr<<"Unable to connect to server!"<<std::endl;
+        std::cerr << "Unable to connect to server!" << std::endl;
         WSACleanup();
         return 1;
     }
     char revbuf[DEFAULT_BUFLEN];
-    const char *connectMsg="客户端发送的连接测试消息";
-    socketSendMsg(ConnectSocket,connectMsg);
-    iResult=recv(ConnectSocket,revbuf,DEFAULT_BUFLEN,0);
-    
-    if(iResult>0)
+    const char *connectMsg = "客户端发送的连接测试消息";
+    socketSendMsg(ConnectSocket, connectMsg);
+    std::string sendMsg;
+
+    iResult = recv(ConnectSocket, revbuf, DEFAULT_BUFLEN, 0);
+
+    if (iResult > 0)
     {
-        std::cout<<"Received: "<<std::string(revbuf,0,iResult)<<std::endl;
-    }else if(iResult==0)
-    {
-        std::cout<<"Connection closed"<<std::endl;
-    }else{
-        std::cerr<<"recv failed: "<<WSAGetLastError()<<std::endl;
+        std::cout << "Received: " << std::string(revbuf, 0, iResult) << std::endl;
     }
-    //关闭套接字
-    iResult = shutdown(ConnectSocket,SD_SEND);
-    if(iResult==SOCKET_ERROR)
+    else if (iResult == 0)
     {
-        std::cerr<<"shutdown failed:"<<WSAGetLastError()<<std::endl;
+        std::cout << "Connection closed" << std::endl;
+    }
+    else
+    {
+        std::cerr << "recv failed: " << WSAGetLastError() << std::endl;
+    }
+    // 关闭套接字
+    iResult = shutdown(ConnectSocket, SD_SEND);
+    if (iResult == SOCKET_ERROR)
+    {
+        std::cerr << "shutdown failed:" << WSAGetLastError() << std::endl;
         closesocket(ConnectSocket);
         WSACleanup();
         return 1;
     }
+    std::cin >> sendMsg;
+    socketSendMsg(ConnectSocket, sendMsg.c_str());
     closesocket(ConnectSocket);
     WSACleanup();
     return 0;
