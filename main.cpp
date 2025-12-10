@@ -100,8 +100,6 @@ int main(int, char **)
         WSACleanup();
         return 1;
     }
-    std::cin >> sendMsg;
-    socketSendMsg(ConnectSocket, sendMsg.c_str());
     closesocket(ConnectSocket);
     WSACleanup();
     return 0;
